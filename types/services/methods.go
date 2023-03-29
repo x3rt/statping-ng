@@ -304,5 +304,10 @@ func (s Service) Uptime() utils.Duration {
 
 // Downtime returns the duration of how long the service has been offline
 func (s Service) Downtime() utils.Duration {
-	return utils.Duration{Duration: utils.Now().Sub(s.LastOnline)}
+	since := s.LastOnline
+	if nil != s.FirstFailureAt {
+		since = *s.FirstFailureAt
+	}
+
+	return utils.Duration{Duration: utils.Now().Sub(since)}
 }

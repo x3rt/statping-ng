@@ -396,6 +396,9 @@ func CheckHttp(s *Service, record bool) (*Service, error) {
 // RecordSuccess will create a new 'hit' record in the database for a successful/online service
 func RecordSuccess(s *Service) {
 	s.LastOnline = utils.Now()
+	if s.Online && nil != s.FirstFailureAt {
+		s.FirstFailureAt = nil
+	}
 	s.Online = true
 	hit := &hits.Hit{
 		Service:   s.Id,
@@ -417,7 +420,11 @@ func RecordSuccess(s *Service) {
 
 // RecordFailure will create a new 'Failure' record in the database for a offline service
 func RecordFailure(s *Service, issue, reason string) {
-	s.LastOffline = utils.Now()
+	now := utils.Now()
+	s.LastOffline = now
+	if s.Online {
+		s.FirstFailureAt = &now
+	}
 
 	fail := &failures.Failure{
 		Service:   s.Id,

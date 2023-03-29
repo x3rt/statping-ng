@@ -57,6 +57,7 @@ type Service struct {
 	LastCheck           time.Time             `gorm:"-" json:"-" yaml:"-"`
 	LastOnline          time.Time             `gorm:"-" json:"last_success" yaml:"-"`
 	LastOffline         time.Time             `gorm:"-" json:"last_error" yaml:"-"`
+	FirstFailureAt      *time.Time            `gorm:"-" json:"-" yaml:"-"`
 	Stats               *Stats                `gorm:"-" json:"stats,omitempty" yaml:"-"`
 	Messages            []*messages.Message   `gorm:"foreignkey:service;association_foreignkey:id" json:"messages,omitempty" yaml:"messages"`
 	Incidents           []*incidents.Incident `gorm:"foreignkey:service;association_foreignkey:id" json:"incidents,omitempty" yaml:"incidents"`
